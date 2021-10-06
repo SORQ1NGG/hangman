@@ -1,3 +1,6 @@
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
+
 function pickWord() {
   let words = ["самолет", "вертолет", "крокодил", "удав"];
 
@@ -6,7 +9,6 @@ function pickWord() {
 
 function setupAnswerArray(word) {
   let answerArray = [];
-
   for (let i = 0; i < word.length; i++) {
     answerArray[i] = "_";
   }
@@ -47,12 +49,43 @@ let showAnswerAndCongratulatePlayer = function (answerArray) {
   }
 };
 
+let drawSegment = function(incorrectGuesses) {
+  ctx.lineWidth = 4;
+
+      if (incorrectGuesses === 0) {
+        ctx.strokeRect(20, 20, 20, 20);
+      } else if (incorrectGuesses === 1) {
+        ctx.beginPath();
+        ctx.moveTo(30, 40);
+        ctx.lineTo(30, 80);
+        ctx.stroke();
+      } else if (incorrectGuesses === 2) {
+        ctx.beginPath();
+        ctx.moveTo(30, 80);
+        ctx.lineTo(10, 110);
+        ctx.stroke();
+      } else if (incorrectGuesses === 3) {
+        ctx.beginPath();
+        ctx.moveTo(30, 80);
+        ctx.lineTo(50, 110);
+        ctx.stroke();
+      } else if (incorrectGuesses === 4) {
+        ctx.beginPath();
+        ctx.moveTo(30, 60);
+        ctx.lineTo(10, 50);
+        ctx.stroke();
+      } else if (incorrectGuesses === 5) {
+        ctx.beginPath();
+        ctx.moveTo(30, 60);
+        ctx.lineTo(50, 50);
+        ctx.stroke();
+      }
+}
+
 let word = pickWord();
-
 let answerArray = setupAnswerArray(word);
-
 let remainingLetters = word.length;
-
+let incorrectGuesses = 0;
 let guesses = 13;
 
 while (remainingLetters > 0 && guesses > 0) {
@@ -72,6 +105,12 @@ while (remainingLetters > 0 && guesses > 0) {
   } else {
     let correctGuesses = updateGameState(guess, word, answerArray);
     remainingLetters -= correctGuesses;
+
+
+    if (correctGuesses === 0) {
+      drawSegment(incorrectGuesses);
+      incorrectGuesses++;
+    }
   }
 }
 
